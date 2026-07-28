@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Aniversário!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <span class="floaty f1"></span>
+  <span class="floaty f2"></span>
+  <span class="floaty f3"></span>
+  <span class="floaty f4"></span>
+  <span class="floaty f5"></span>
+  <span class="floaty f6"></span>
+  <span class="floaty f7"></span>
+  <span class="floaty f8"></span>
+  <span class="floaty f9"></span>
+  <span class="floaty f10"></span>
+  <span class="floaty f11"></span>
+  <span class="floaty f12"></span>
+  <span class="floaty f13"></span>
+  <span class="floaty f14"></span>
+  <span class="floaty f15"></span>
+  <span class="floaty f16"></span>
+  <span class="floaty f17"></span>
+  <span class="floaty f18"></span>
+  <span class="floaty f19"></span>
+  <span class="floaty f20"></span>
+</div>
+
+<div class="stage" id="stage">
+
+  <div class="envelope-wrap" id="envWrap">
+    <div>
+      <div class="envelope">
+        <div class="env-back"></div>
+        <div class="env-letter-peek"></div>
+        <div class="env-front"></div>
+        <div class="env-flap" id="flap"></div>
+        <div class="env-seal">🎉</div>
+      </div>
+
+      <p class="hint">toca no envelope pra abrir</p>
+    </div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="letter">
+      <span class="eyebrow">Pra você</span>
+      <h1>Feliz aniversário, <span class="who"></span>! 🎂</h1>
+
+      <div class="candles" id="candles">
+        <div class="candle" data-c="1"><div class="flame"></div></div>
+        <div class="candle" data-c="2"><div class="flame"></div></div>
+        <div class="candle" data-c="3"><div class="flame"></div></div>
+      </div>
+      <p class="make-wish" id="wishText">assopra as velinhas e faz um pedido</p>
+
+      <p>Hoje é um daqueles dias que merecem ser comemorados com festa, bolo e muito barulho. Espero que venha recheado de boas risadas, gente que você gosta por perto e pelo menos um pedaço de bolo repetido.</p>
+      <p>Que o próximo ano te traga mais dos momentos bons, menos dos ruins, e que você continue sendo essa pessoa que faz diferença por onde passa.</p>
+
+      <div class="signature">com carinho, Gilmar Henrique 💛</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const envWrap = document.getElementById('envWrap');
+  const flap = document.getElementById('flap');
+
+  envWrap.addEventListener('click', () => {
+    flap.style.transform = 'rotateX(180deg)';
+    setTimeout(() => {
+      stage.classList.add('opened');
+      burstConfetti();
+    }, 380);
+  });
+
+  const colors = ['#FF6B5B', '#FFC24B', '#63C7B2', '#B79CED', '#FFF8EC'];
+
+  function burstConfetti(count = 70) {
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (2.2 + Math.random() * 1.8) + 's';
+      el.style.animationDelay = (Math.random() * 0.4) + 's';
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }
+  }
+
+  // candle blowing
+  const candles = document.querySelectorAll('.candle');
+  const wishText = document.getElementById('wishText');
+  candles.forEach(c => {
+    c.addEventListener('click', () => {
+      c.classList.add('out');
+      const allOut = [...candles].every(x => x.classList.contains('out'));
+      if (allOut) {
+        wishText.textContent = 'pedido feito 🌟 que se realize!';
+        burstConfetti(40);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -37,7 +37,7 @@
 
   <div class="envelope-wrap" id="envWrap">
     <div>
-      <div class="envelope">
+      <div class="envelope" role="button" tabindex="0" aria-label="Abrir cartão de aniversário">
         <div class="env-back"></div>
         <div class="env-letter-peek"></div>
         <div class="env-front"></div>
@@ -45,21 +45,21 @@
         <div class="env-seal">🎉</div>
       </div>
 
-      <p class="hint">toca no envelope pra abrir</p>
+      <p class="hint">toque no envelope para abrir</p>
     </div>
   </div>
 
   <div class="card" id="card">
     <div class="letter">
-      <span class="eyebrow">Pra você</span>
-      <h1>Feliz aniversário, <span class="who"></span>! 🎂</h1>
+      <span class="eyebrow">Um dia só seu</span>
+      <h1>Feliz aniversário, <span class="who">meu amigo(a)</span>! 🎂</h1>
 
       <div class="candles" id="candles">
         <div class="candle" data-c="1"><div class="flame"></div></div>
         <div class="candle" data-c="2"><div class="flame"></div></div>
         <div class="candle" data-c="3"><div class="flame"></div></div>
       </div>
-      <p class="make-wish" id="wishText">assopra as velinhas e faz um pedido</p>
+      <p class="make-wish" id="wishText">toque nas velinhas e faça um pedido</p>
 
       <p>Hoje é um daqueles dias que merecem ser comemorados com festa, bolo e muito barulho. Espero que venha recheado de boas risadas, gente que você gosta por perto e pelo menos um pedaço de bolo repetido.</p>
       <p>Que o próximo ano te traga mais dos momentos bons, menos dos ruins, e que você continue sendo essa pessoa que faz diferença por onde passa.</p>
@@ -75,12 +75,23 @@
   const envWrap = document.getElementById('envWrap');
   const flap = document.getElementById('flap');
 
-  envWrap.addEventListener('click', () => {
+  let opened = false;
+  function openCard() {
+    if (opened) return;
+    opened = true;
     flap.style.transform = 'rotateX(180deg)';
     setTimeout(() => {
       stage.classList.add('opened');
       burstConfetti();
     }, 380);
+  }
+
+  envWrap.addEventListener('click', openCard);
+  envWrap.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openCard();
+    }
   });
 
   const colors = ['#FF6B5B', '#FFC24B', '#63C7B2', '#B79CED', '#FFF8EC'];
@@ -107,7 +118,7 @@
       c.classList.add('out');
       const allOut = [...candles].every(x => x.classList.contains('out'));
       if (allOut) {
-        wishText.textContent = 'pedido feito 🌟 que se realize!';
+        wishText.textContent = 'pedido feito 🌟 que ele se realize!';
         burstConfetti(40);
       }
     });

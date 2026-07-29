@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div class="card" id="card">
+  <div class="card" id="card" role="region" aria-live="polite">
     <div class="letter">
       <span class="eyebrow">Um dia só seu</span>
       <h1>Feliz aniversário, <span class="who">meu amigo(a)</span>! 🎂</h1>
@@ -59,12 +59,17 @@
         <div class="candle" data-c="2"><div class="flame"></div></div>
         <div class="candle" data-c="3"><div class="flame"></div></div>
       </div>
-      <p class="make-wish" id="wishText">toque nas velinhas e faça um pedido</p>
+      <p class="make-wish" id="wishText" aria-live="polite">toque nas velinhas e faça um pedido</p>
 
       <p>Hoje é um daqueles dias que merecem ser comemorados com festa, bolo e muito barulho. Espero que venha recheado de boas risadas, gente que você gosta por perto e pelo menos um pedaço de bolo repetido.</p>
       <p>Que o próximo ano te traga mais dos momentos bons, menos dos ruins, e que você continue sendo essa pessoa que faz diferença por onde passa.</p>
 
-      <div class="signature">com carinho, Gilmar Henrique 💛</div>
+      <div class="signature" id="signature">com carinho, Gilmar Henrique 💛</div>
+      <div class="card-actions">
+        <button class="action-button secondary" id="restartCard" type="button">ver de novo</button>
+        <button class="action-button" id="shareCard" type="button">compartilhar cartão</button>
+      </div>
+      <p class="share-feedback" id="shareFeedback" aria-live="polite"></p>
     </div>
   </div>
 
@@ -74,6 +79,26 @@
   const stage = document.getElementById('stage');
   const envWrap = document.getElementById('envWrap');
   const flap = document.getElementById('flap');
+  const envelope = document.querySelector('.envelope');
+  const wishText = document.getElementById('wishText');
+  const candles = document.querySelectorAll('.candle');
+  const restartCard = document.getElementById('restartCard');
+  const shareCard = document.getElementById('shareCard');
+  const shareFeedback = document.getElementById('shareFeedback');
+  const signature = document.getElementById('signature');
+
+  const defaultWishText = wishText.textContent;
+  const params = new URLSearchParams(window.location.search);
+  const recipient = params.get('nome');
+  const sender = params.get('de');
+  const customMessage = params.get('mensagem');
+
+  if (recipient) document.querySelector('.who').textContent = recipient;
+  if (sender) signature.textContent = 'com carinho, ' + sender + ' 💛';
+  if (customMessage) {
+    const paragraphs = document.querySelectorAll('.letter > p:not(.make-wish):not(.share-feedback)');
+    if (paragraphs[0]) paragraphs[0].textContent = customMessage;
+  }
 
   let opened = false;
   function openCard() {
@@ -87,10 +112,41 @@
   }
 
   envWrap.addEventListener('click', openCard);
-  envWrap.addEventListener('keydown', event => {
+  envelope.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       openCard();
+    }
+  });
+
+  restartCard.addEventListener('click', () => {
+    opened = false;
+    stage.classList.remove('opened');
+    flap.style.transform = '';
+    candles.forEach(candle => candle.classList.remove('out'));
+    wishText.textContent = defaultWishText;
+    envelope.focus();
+  });
+
+  shareCard.addEventListener('click', async () => {
+    const shareData = {
+      title: document.title,
+      text: document.querySelector('h1').textContent,
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        shareFeedback.textContent = 'cartão compartilhado!';
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(window.location.href);
+        shareFeedback.textContent = 'link copiado para a área de transferência!';
+      } else {
+        shareFeedback.textContent = 'copie o endereço desta página para compartilhar.';
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') shareFeedback.textContent = 'não foi possível compartilhar agora.';
     }
   });
 
@@ -111,8 +167,6 @@
   }
 
   // candle blowing
-  const candles = document.querySelectorAll('.candle');
-  const wishText = document.getElementById('wishText');
   candles.forEach(c => {
     c.addEventListener('click', () => {
       c.classList.add('out');

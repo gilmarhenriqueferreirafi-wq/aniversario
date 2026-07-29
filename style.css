@@ -345,3 +345,61 @@ h1 span { color: var(--coral); }
   .stage, .card { padding: 24px 16px; }
   .envelope { width: min(300px, calc(100vw - 40px)); }
 }
+
+
+/* ---------- AÇÕES DO CARTÃO ---------- */
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.action-button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: var(--coral);
+  color: #fff;
+  font: 700 15px 'Work Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(255,107,91,0.24);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(255,107,91,0.32);
+}
+
+.action-button:active { transform: translateY(0); }
+
+.action-button.secondary {
+  background: #eee7dc;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.action-button.secondary:hover { background: #e5dbcd; }
+
+.action-button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.share-feedback {
+  min-height: 1.5em;
+  margin: 12px 0 0 !important;
+  font-size: 14px !important;
+  color: #6a5f76 !important;
+}
+
+@media (max-width: 480px) {
+  .card-actions { display: grid; grid-template-columns: 1fr; }
+  .action-button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-button { transition: none; }
+}
